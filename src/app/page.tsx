@@ -1,6 +1,6 @@
 'use client';
 
-import Card from '@/components/Card';
+import Card from '@/components/card/Card';
 import { useMovies, getImageUrl } from '@/hooks/useMovies';
 
 export default function Home() {

@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Card Component - Snapshot Testing debe coincidir con el snapshot para props completas 1`] = `
+<div
+  class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 cursor-pointer"
+>
+  <div
+    class="relative w-full h-64 bg-gray-200 dark:bg-gray-700"
+  >
+    <img
+      alt="Complete Test Card"
+      class="object-cover"
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      src="https://example.com/image.jpg"
+    />
+  </div>
+  <div
+    class="p-4"
+  >
+    <div
+      class="flex items-start justify-between gap-2 mb-2"
+    >
+      <h3
+        class="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 flex-1"
+      >
+        Complete Test Card
+      </h3>
+      <div
+        class="flex items-center gap-1 bg-yellow-100 dark:bg-yellow-900 px-2 py-1 rounded-md flex-shrink-0"
+      >
+        <span
+          class="text-yellow-600 dark:text-yellow-400"
+        >
+          ⭐
+        </span>
+        <span
+          class="text-sm font-semibold text-gray-900 dark:text-white"
+        >
+          4.5
+        </span>
+      </div>
+    </div>
+    <p
+      class="text-sm text-gray-600 dark:text-gray-400 mb-2"
+    >
+      Test Subtitle
+    </p>
+    <p
+      class="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 mb-3"
+    >
+      This is a test description for the card component
+    </p>
+    <div
+      class="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700"
+    >
+      Test Footer
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Card Component - Snapshot Testing debe coincidir con el snapshot para props mínimas 1`] = `
+<div
+  class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 "
+>
+  <div
+    class="p-4"
+  >
+    <div
+      class="flex items-start justify-between gap-2 mb-2"
+    >
+      <h3
+        class="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 flex-1"
+      >
+        Test Card Title
+      </h3>
+    </div>
+  </div>
+</div>
+`;
