@@ -1,7 +1,6 @@
 'use client';
 
 import { useBooks } from '@/hooks/useBooks';
-import Image from 'next/image';
 
 export default function BooksPage() {
   const { books, loading, error } = useBooks({ q: 'harry potter', perPage: 10 });
