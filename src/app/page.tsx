@@ -2,9 +2,26 @@
 
 import Card from '@/components/card/Card';
 import { useMovies, getImageUrl } from '@/hooks/useMovies';
+import { useState } from 'react';
+import SearchBar from '@/components/searchbar/SearchBar';
+
+type MovieCategory = 'popular' | 'now_playing' | 'top_rated' | 'upcoming';
+
+const CATEGORIES: { key: MovieCategory; label: string }[] = [
+  { key: 'popular', label: 'Populares' },
+  { key: 'now_playing', label: 'En Cartelera' },
+  { key: 'top_rated', label: 'Mejor Valoradas' },
+  { key: 'upcoming', label: 'Próximos Estrenos' },
+];
 
 export default function Home() {
-  const { movies, loading, error } = useMovies({ endpoint: 'popular' });
+  const [category, setCategory] = useState<MovieCategory>('popular');
+  const [input, setInput] = useState('');
+  const [search, setSearch] = useState('');
+  const { movies, loading, error } = useMovies({ endpoint: category, search });
+
+  const currentCategory = CATEGORIES.find((c) => c.key === category);
+  const isSearching = search.trim().length > 0;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -12,11 +29,36 @@ export default function Home() {
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Películas Populares
+            {isSearching ? `Resultados para "${search}"` : currentCategory?.label || 'Películas'}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Descubre las películas más populares del momento
+            {isSearching ? `${movies.length} ${movies.length > 1 ? 'películas encontradas' : 'película encontrada'}` : 'Descubre las mejores películas'}
           </p>
+          <div className="mt-4">
+            <SearchBar
+              value={input}
+              onChange={setInput}
+              onDebouncedChange={setSearch}
+              placeholder="Buscar películas..."
+            />
+          </div>
+          {!isSearching && (
+            <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.key}
+                  onClick={() => setCategory(cat.key)}
+                  className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${
+                    category === cat.key
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
@@ -71,3 +113,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -7,5 +7,4 @@ export type SearchBarProps = {
   className?: string;
   name?: string;
   autoFocus?: boolean;
-  ariaLabel?: string;
 };
