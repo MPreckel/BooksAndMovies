@@ -14,6 +14,9 @@ export interface GoogleBooksVolume {
     };
     infoLink?: string;
     publishedDate?: string;
+    averageRating?: number;
+    ratingsCount?: number;
+    categories?: string[];
   };
 }
 
@@ -22,10 +25,22 @@ interface GoogleBooksResponse {
   items?: GoogleBooksVolume[];
 }
 
+export type BookCategory = 'fiction' | 'science' | 'history' | 'biography' | 'technology' | 'art';
+
+export const BOOK_CATEGORY_QUERIES: Record<BookCategory, string> = {
+  fiction: 'subject:fiction',
+  science: 'subject:science',
+  history: 'subject:history',
+  biography: 'subject:biography',
+  technology: 'subject:technology',
+  art: 'subject:art',
+};
+
 interface UseBooksOptions {
-  q?: string; // consulta de búsqueda
-  page?: number; // página 1-based
-  perPage?: number; // maxResults (hasta 40)
+  category?: BookCategory;
+  search?: string;
+  page?: number;
+  perPage?: number;
 }
 
 interface UseBooksReturn {
@@ -38,9 +53,10 @@ interface UseBooksReturn {
 const GOOGLE_BOOKS_BASE = "https://www.googleapis.com/books/v1/volumes";
 
 export function useBooks({
-  q = "harry potter",
+  category = 'fiction',
+  search = '',
   page = 1,
-  perPage = 10,
+  perPage = 20,
 }: UseBooksOptions = {}): UseBooksReturn {
   const [books, setBooks] = useState<GoogleBooksVolume[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,23 +70,31 @@ export function useBooks({
       setLoading(true);
       setError(null);
       try {
-        // Google Books usa startIndex (0-based) y maxResults (1-40)
         const startIndex = Math.max(0, (page - 1) * perPage);
         const maxResults = Math.min(Math.max(perPage, 1), 40);
+        
+        const searchTerm = search.trim();
+        let query: string;
+
+        if (searchTerm) {
+          query = searchTerm;
+        } else {
+          query = BOOK_CATEGORY_QUERIES[category];
+        }
+
         const url = `${GOOGLE_BOOKS_BASE}?q=${encodeURIComponent(
-          q
-        )}&startIndex=${startIndex}&maxResults=${maxResults}`;
+          query
+        )}&startIndex=${startIndex}&maxResults=${maxResults}&orderBy=relevance`;
 
         const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) {
           throw new Error(`Error ${res.status}: ${res.statusText}`);
         }
         const data: GoogleBooksResponse = await res.json();
-        console.log("data", data);
         setBooks(data.items || []);
         setTotalItems(data.totalItems || 0);
       } catch (err) {
-        if ((err as any).name === "AbortError") return;
+        if (err instanceof Error && err.name === "AbortError") return;
         const message =
           err instanceof Error
             ? err.message
@@ -84,7 +108,7 @@ export function useBooks({
 
     fetchBooks();
     return () => controller.abort();
-  }, [q, page, perPage]);
+  }, [category, search, page, perPage]);
 
   return { books, loading, error, totalItems };
 }
