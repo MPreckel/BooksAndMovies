@@ -1,4 +1,5 @@
 import Link from "next/link";
+import UserMenu from "@/components/auth/UserMenu";
 
 export default function NavBar() {
   return (
@@ -10,6 +11,9 @@ export default function NavBar() {
         <Link href="/books" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
           Libros
         </Link>
+        <div className="ml-auto">
+          <UserMenu />
+        </div>
       </div>
     </nav>
   );
