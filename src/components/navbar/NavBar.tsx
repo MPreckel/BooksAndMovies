@@ -8,6 +8,9 @@ export default function NavBar() {
         <Link href="/" className="text-gray-900 dark:text-white font-medium hover:text-blue-600 dark:hover:text-blue-400">
           Películas
         </Link>
+        <Link href="/movies/watchlist" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+          Mi Lista
+        </Link>
         <Link href="/books" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
           Libros
         </Link>

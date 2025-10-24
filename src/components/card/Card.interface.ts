@@ -7,4 +7,10 @@ export interface CardProps {
   rating?: number;
   footer?: string;
   onClick?: () => void;
+  actionButton?: {
+    label: string;
+    onClick: (e: React.MouseEvent) => void;
+    variant?: 'primary' | 'secondary' | 'danger';
+    disabled?: boolean;
+  };
 }

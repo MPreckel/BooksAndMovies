@@ -9,7 +9,18 @@ export default function Card({
   rating,
   footer,
   onClick,
+  actionButton,
 }: CardProps) {
+  const getButtonStyles = (variant: 'primary' | 'secondary' | 'danger' = 'primary') => {
+    const baseStyles = 'w-full py-2 px-4 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+    const variants = {
+      primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+      secondary: 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white',
+      danger: 'bg-red-600 hover:bg-red-700 text-white',
+    };
+    return `${baseStyles} ${variants[variant]}`;
+  };
+
   return (
     <div
       className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 ${
@@ -65,6 +76,22 @@ export default function Card({
         {footer && (
           <div className="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
             {footer}
+          </div>
+        )}
+
+        {/* Action Button */}
+        {actionButton && (
+          <div className="mt-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                actionButton.onClick(e);
+              }}
+              disabled={actionButton.disabled}
+              className={getButtonStyles(actionButton.variant)}
+            >
+              {actionButton.label}
+            </button>
           </div>
         )}
       </div>

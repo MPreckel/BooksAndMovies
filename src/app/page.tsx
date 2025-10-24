@@ -2,6 +2,7 @@
 
 import Card from '@/components/card/Card';
 import { useMovies, getImageUrl } from '@/hooks/useMovies';
+import { useMoviesToWatch } from '@/hooks/useMoviesToWatch';
 import { useState } from 'react';
 import SearchBar from '@/components/searchbar/SearchBar';
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
   const { movies, loading, error } = useMovies({ endpoint: category, search });
+  const { addMovie, removeMovie, isMovieInList } = useMoviesToWatch();
 
   const currentCategory = CATEGORIES.find((c) => c.key === category);
   const isSearching = search.trim().length > 0;
@@ -85,19 +87,38 @@ export default function Home() {
         {/* Movies Grid */}
         {!loading && !error && movies.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {movies.map((movie) => (
-              <Card
-                key={movie.id}
-                id={movie.id}
-                title={movie.title}
-                subtitle={new Date(movie.release_date).getFullYear().toString()}
-                description={movie.overview}
-                imageUrl={getImageUrl(movie.poster_path)}
-                rating={movie.vote_average}
-                footer={`${movie.vote_count.toLocaleString()} votos`}
-                onClick={() => console.log('Película seleccionada:', movie.title)}
-              />
-            ))}
+            {movies.map((movie) => {
+              const inWatchlist = isMovieInList(movie.id);
+              
+              return (
+                <Card
+                  key={movie.id}
+                  id={movie.id}
+                  title={movie.title}
+                  subtitle={new Date(movie.release_date).getFullYear().toString()}
+                  description={movie.overview}
+                  imageUrl={getImageUrl(movie.poster_path)}
+                  rating={movie.vote_average}
+                  footer={`${movie.vote_count.toLocaleString()} votos`}
+                  onClick={() => console.log('Película seleccionada:', movie.title)}
+                  actionButton={{
+                    label: inWatchlist ? '✓ En mi lista' : 'VER',
+                    onClick: async () => {
+                      if (inWatchlist) {
+                        await removeMovie(movie.id);
+                      } else {
+                        await addMovie({
+                          tmdb_id: movie.id,
+                          title: movie.title,
+                          poster_path: movie.poster_path,
+                        });
+                      }
+                    },
+                    variant: inWatchlist ? 'secondary' : 'primary',
+                  }}
+                />
+              );
+            })}
           </div>
         )}
 
