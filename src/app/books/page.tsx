@@ -1,8 +1,12 @@
 'use client';
 
 import { useBooks, BookCategory } from '@/hooks/useBooks';
+import { useBooksToRead } from '@/hooks/useBooksToRead';
+import { useBooksReading } from '@/hooks/useBooksReading';
+import { useBooksRead } from '@/hooks/useBooksRead';
 import { useState } from 'react';
 import SearchBar from '@/components/searchbar/SearchBar';
+import Card from '@/components/card/Card';
 
 const CATEGORIES: { key: BookCategory; label: string }[] = [
   { key: 'fiction', label: 'Ficción' },
@@ -18,6 +22,9 @@ export default function BooksPage() {
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
   const { books, loading, error } = useBooks({ category, search });
+  const { addBook: addToRead, removeBook: removeFromToRead, isBookInList } = useBooksToRead();
+  const { addBook: addToReading, removeBook: removeFromReading, isBookReading } = useBooksReading();
+  const { addBook: addToReadBooks, removeBook: removeFromRead, isBookRead } = useBooksRead();
 
   const currentCategory = CATEGORIES.find((c) => c.key === category);
   const isSearching = search.trim().length > 0;
@@ -83,24 +90,72 @@ export default function BooksPage() {
               const title = book.volumeInfo?.title ?? 'Sin título';
               const authors = book.volumeInfo?.authors ?? [];
               const thumbnail = book.volumeInfo?.imageLinks?.thumbnail || book.volumeInfo?.imageLinks?.smallThumbnail || null;
+              const inToReadList = isBookInList(book.id);
+              const inReadingList = isBookReading(book.id);
+              const inReadList = isBookRead(book.id);
+
               return (
-                <div key={book.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow cursor-pointer">
-                  {thumbnail ? (
-                    <img src={thumbnail} alt={title} className="w-full h-48 object-cover" />
-                  ) : (
-                    <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-                      </svg>
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <h2 className="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-1">{title}</h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1">
-                      {authors.length ? authors.join(', ') : 'Autor desconocido'}
-                    </p>
-                  </div>
-                </div>
+                <Card
+                  key={book.id}
+                  id={book.id}
+                  title={title}
+                  subtitle={authors.length ? authors.join(', ') : 'Autor desconocido'}
+                  imageUrl={thumbnail || undefined}
+                  onClick={() => console.log('Libro seleccionado:', title)}
+                  actionButtonWithOptions={{
+                    options: [
+                      {
+                        label: inToReadList ? '✓ En mi lista' : 'LEER',
+                        onClick: async () => {
+                          if (inToReadList) {
+                            await removeFromToRead(book.id);
+                          } else {
+                            await addToRead({
+                              google_books_id: book.id,
+                              title,
+                              authors,
+                              thumbnail,
+                            });
+                          }
+                        },
+                        variant: inToReadList ? 'secondary' : 'primary',
+                      },
+                      {
+                        label: inReadingList ? '✓ Leyendo' : 'LEYENDO',
+                        onClick: async () => {
+                          if (inReadingList) {
+                            await removeFromReading(book.id);
+                          } else {
+                            await addToReading({
+                              google_books_id: book.id,
+                              title,
+                              authors,
+                              thumbnail,
+                            });
+                          }
+                        },
+                        variant: inReadingList ? 'secondary' : 'primary',
+                      },
+                      {
+                        label: inReadList ? '✓ Leído' : 'LEÍDO',
+                        onClick: async () => {
+                          if (inReadList) {
+                            await removeFromRead(book.id);
+                          } else {
+                            await addToReadBooks({
+                              google_books_id: book.id,
+                              title,
+                              authors,
+                              thumbnail,
+                            });
+                          }
+                        },
+                        variant: inReadList ? 'secondary' : 'primary',
+                      },
+                    ],
+                    defaultOption: 0,
+                  }}
+                />
               );
             })}
           </div>

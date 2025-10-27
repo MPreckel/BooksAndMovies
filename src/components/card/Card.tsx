@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { CardProps } from './Card.interface';
+import ActionButtonWithDropdown from './ActionButtonWithDropdown';
 
 export default function Card({
   title,
@@ -10,6 +11,7 @@ export default function Card({
   footer,
   onClick,
   actionButton,
+  actionButtonWithOptions,
 }: CardProps) {
   const getButtonStyles = (variant: 'primary' | 'secondary' | 'danger' = 'primary') => {
     const baseStyles = 'w-full py-2 px-4 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
@@ -23,14 +25,16 @@ export default function Card({
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 ${
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
+        actionButtonWithOptions ? 'overflow-visible' : 'overflow-hidden'
+      } transition-transform hover:scale-105 ${
         onClick ? 'cursor-pointer' : ''
       }`}
       onClick={onClick}
     >
       {/* Imagen */}
       {imageUrl && (
-        <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700">
+        <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg">
           <Image
             src={imageUrl}
             alt={title}
@@ -80,7 +84,7 @@ export default function Card({
         )}
 
         {/* Action Button */}
-        {actionButton && (
+        {actionButton && !actionButtonWithOptions && (
           <div className="mt-3">
             <button
               onClick={(e) => {
@@ -92,6 +96,17 @@ export default function Card({
             >
               {actionButton.label}
             </button>
+          </div>
+        )}
+
+        {/* Action Button with Dropdown */}
+        {actionButtonWithOptions && (
+          <div className="mt-3">
+            <ActionButtonWithDropdown
+              options={actionButtonWithOptions.options}
+              defaultOption={actionButtonWithOptions.defaultOption}
+              disabled={actionButtonWithOptions.disabled}
+            />
           </div>
         )}
       </div>

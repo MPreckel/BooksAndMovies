@@ -3,6 +3,7 @@
 import Card from '@/components/card/Card';
 import { useMovies, getImageUrl } from '@/hooks/useMovies';
 import { useMoviesToWatch } from '@/hooks/useMoviesToWatch';
+import { useMoviesWatched } from '@/hooks/useMoviesWatched';
 import { useState } from 'react';
 import SearchBar from '@/components/searchbar/SearchBar';
 
@@ -20,7 +21,8 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
   const { movies, loading, error } = useMovies({ endpoint: category, search });
-  const { addMovie, removeMovie, isMovieInList } = useMoviesToWatch();
+  const { addMovie: addToWatch, removeMovie: removeFromWatch, isMovieInList } = useMoviesToWatch();
+  const { addMovie: addToWatched, removeMovie: removeFromWatched, isMovieWatched } = useMoviesWatched();
 
   const currentCategory = CATEGORIES.find((c) => c.key === category);
   const isSearching = search.trim().length > 0;
@@ -89,6 +91,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {movies.map((movie) => {
               const inWatchlist = isMovieInList(movie.id);
+              const watched = isMovieWatched(movie.id);
               
               return (
                 <Card
@@ -101,20 +104,36 @@ export default function Home() {
                   rating={movie.vote_average}
                   footer={`${movie.vote_count.toLocaleString()} votos`}
                   onClick={() => console.log('Película seleccionada:', movie.title)}
-                  actionButton={{
-                    label: inWatchlist ? '✓ En mi lista' : 'VER',
-                    onClick: async () => {
-                      if (inWatchlist) {
-                        await removeMovie(movie.id);
-                      } else {
-                        await addMovie({
-                          tmdb_id: movie.id,
-                          title: movie.title,
-                          poster_path: movie.poster_path,
-                        });
-                      }
-                    },
-                    variant: inWatchlist ? 'secondary' : 'primary',
+                  actionButtonWithOptions={{
+                    options: [
+                      {
+                        label: inWatchlist ? '✓ En mi lista' : 'VER',
+                        onClick: async () => {
+                          if (inWatchlist) {
+                            await removeFromWatch(movie.id);
+                          } else {
+                            await addToWatch({
+                              tmdb_id: movie.id,
+                              title: movie.title,
+                              poster_path: movie.poster_path,
+                            });
+                          }
+                        },
+                        variant: inWatchlist ? 'secondary' : 'primary',
+                      },
+                      {
+                        label: 'YA VISTA',
+                        onClick: async () => {
+                            await addToWatched({
+                              tmdb_id: movie.id,
+                              title: movie.title,
+                              poster_path: movie.poster_path,
+                            });
+                        },
+                        variant: 'primary',
+                      },
+                    ],
+                    defaultOption: 0,
                   }}
                 />
               );
