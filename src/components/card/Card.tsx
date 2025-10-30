@@ -42,7 +42,7 @@ export default function Card({
       )}
 
       {/* Contenido */}
-      <div className="flex flex-col p-4">
+      <div className="flex flex-col p-4 min-h-[280px]">
         {/* Título y Rating */}
         <div className="flex justify-between">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 ">
@@ -81,7 +81,7 @@ export default function Card({
 
         {/* Action Button */}
         {actionButton && !actionButtonWithOptions && (
-          <div className="mt-3">
+          <div className="mt-auto pt-3">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -97,7 +97,7 @@ export default function Card({
 
         {/* Action Button with Dropdown */}
         {actionButtonWithOptions && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-auto pt-3">
             <ActionButtonWithDropdown
               options={actionButtonWithOptions.options}
               defaultOption={actionButtonWithOptions.defaultOption}

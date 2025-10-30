@@ -78,7 +78,7 @@ export default function ActionButtonWithDropdown({
         <button
           onClick={handleMainClick}
           disabled={disabled}
-          className={`flex-1 py-2 px-4 rounded-l-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${getButtonStyles(
+          className={`cursor-pointer flex-1 py-2 px-4 rounded-l-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${getButtonStyles(
             selectedOption.variant
           )}`}
         >
@@ -89,7 +89,7 @@ export default function ActionButtonWithDropdown({
         <button
           onClick={handleDropdownToggle}
           disabled={disabled}
-          className={`py-2 pr-2 rounded-r-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none ${getButtonStyles(
+          className={`cursor-pointer p-2 rounded-r-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none ${getButtonStyles(
             selectedOption.variant
           )}`}
         >

@@ -102,6 +102,7 @@ export default function BooksPage() {
                   subtitle={authors.length ? authors.join(', ') : 'Autor desconocido'}
                   imageUrl={thumbnail || undefined}
                   onClick={() => console.log('Libro seleccionado:', title)}
+                  description={book.volumeInfo?.description}
                   actionButtonWithOptions={{
                     options: [
                       {

@@ -42,7 +42,7 @@ export default function NavBar() {
 
   return (
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-6">
+      <div className="max-w-full mx-auto px-4 h-14 flex items-center gap-6">
         {/* Películas con dropdown */}
         <div className="relative">
           <button
@@ -51,7 +51,7 @@ export default function NavBar() {
               setShowMoviesMenu(!showMoviesMenu);
               setShowBooksMenu(false);
             }}
-            className="text-gray-900 dark:text-white font-medium hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
+            className="cursor-pointer text-gray-900 dark:text-white font-medium hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
           >
             Películas
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,7 +81,7 @@ export default function NavBar() {
               setShowBooksMenu(!showBooksMenu);
               setShowMoviesMenu(false);
             }}
-            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
+            className="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1"
           >
             Libros
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
