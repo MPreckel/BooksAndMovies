@@ -30,7 +30,7 @@ export default function BooksPage() {
   const isSearching = search.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -67,7 +67,7 @@ export default function BooksPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-full mx-auto px-4 py-8">
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">

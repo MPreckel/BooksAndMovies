@@ -2,11 +2,43 @@
 
 import Link from "next/link";
 import UserMenu from "@/components/auth/UserMenu";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function NavBar() {
   const [showMoviesMenu, setShowMoviesMenu] = useState(false);
   const [showBooksMenu, setShowBooksMenu] = useState(false);
+  
+  const moviesModalRef = useRef<HTMLDivElement>(null);
+  const moviesTitleRef = useRef<HTMLButtonElement>(null);
+  const booksModalRef = useRef<HTMLDivElement>(null);
+  const booksTitleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Cerrar menú de películas si el click no es en el modal ni en el título
+      if (showMoviesMenu &&
+          moviesModalRef.current &&
+          moviesTitleRef.current &&
+          !moviesModalRef.current.contains(event.target as Node) &&
+          !moviesTitleRef.current.contains(event.target as Node)) {
+        setShowMoviesMenu(false);
+      }
+      
+      // Cerrar menú de libros si el click no es en el modal ni en el título
+      if (showBooksMenu &&
+          booksModalRef.current &&
+          booksTitleRef.current &&
+          !booksModalRef.current.contains(event.target as Node) &&
+          !booksTitleRef.current.contains(event.target as Node)) {
+        setShowBooksMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMoviesMenu, showBooksMenu]);
 
   return (
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
@@ -14,6 +46,7 @@ export default function NavBar() {
         {/* Películas con dropdown */}
         <div className="relative">
           <button
+            ref={moviesTitleRef}
             onClick={() => {
               setShowMoviesMenu(!showMoviesMenu);
               setShowBooksMenu(false);
@@ -26,14 +59,14 @@ export default function NavBar() {
             </svg>
           </button>
           {showMoviesMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 min-w-[150px]">
-              <Link href="/" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div ref={moviesModalRef} className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 min-w-[150px]">
+              <Link href="/" onClick={() => setShowMoviesMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Explorar
               </Link>
-              <Link href="/movies/watchlist" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Link href="/movies/watchlist" onClick={() => setShowMoviesMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Por Ver
               </Link>
-              <Link href="/movies/watched" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Link href="/movies/watched" onClick={() => setShowMoviesMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Ya Vistas
               </Link>
             </div>
@@ -43,6 +76,7 @@ export default function NavBar() {
         {/* Libros con dropdown */}
         <div className="relative">
           <button
+            ref={booksTitleRef}
             onClick={() => {
               setShowBooksMenu(!showBooksMenu);
               setShowMoviesMenu(false);
@@ -55,17 +89,17 @@ export default function NavBar() {
             </svg>
           </button>
           {showBooksMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 min-w-[150px]">
-              <Link href="/books" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div ref={booksModalRef} className="absolute top-full left-0 mt-1 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 min-w-[150px]">
+              <Link href="/books" onClick={() => setShowBooksMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Explorar
               </Link>
-              <Link href="/books/to-read" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Link href="/books/to-read" onClick={() => setShowBooksMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Por Leer
               </Link>
-              <Link href="/books/reading" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Link href="/books/reading" onClick={() => setShowBooksMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Leyendo
               </Link>
-              <Link href="/books/read" className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <Link href="/books/read" onClick={() => setShowBooksMenu(false)} className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Leídos
               </Link>
             </div>

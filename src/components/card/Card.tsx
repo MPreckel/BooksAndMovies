@@ -25,11 +25,7 @@ export default function Card({
 
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
-        actionButtonWithOptions ? 'overflow-visible' : 'overflow-hidden'
-      } transition-transform hover:scale-105 ${
-        onClick ? 'cursor-pointer' : ''
-      }`}
+      className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4"
       onClick={onClick}
     >
       {/* Imagen */}
@@ -46,10 +42,10 @@ export default function Card({
       )}
 
       {/* Contenido */}
-      <div className="p-4">
+      <div className="flex flex-col p-4">
         {/* Título y Rating */}
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 flex-1">
+        <div className="flex justify-between">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 ">
             {title}
           </h3>
           {rating !== undefined && (
@@ -101,7 +97,7 @@ export default function Card({
 
         {/* Action Button with Dropdown */}
         {actionButtonWithOptions && (
-          <div className="mt-3">
+          <div className="flex justify-center">
             <ActionButtonWithDropdown
               options={actionButtonWithOptions.options}
               defaultOption={actionButtonWithOptions.defaultOption}

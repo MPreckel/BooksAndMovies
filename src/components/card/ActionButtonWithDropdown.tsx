@@ -72,7 +72,7 @@ export default function ActionButtonWithDropdown({
   }
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative w-40" ref={dropdownRef}>
       <div className="flex gap-0">
         {/* Main Button */}
         <button
@@ -89,7 +89,7 @@ export default function ActionButtonWithDropdown({
         <button
           onClick={handleDropdownToggle}
           disabled={disabled}
-          className={`py-2 px-2 rounded-r-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-l border-white/20 ${getButtonStyles(
+          className={`py-2 pr-2 rounded-r-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none ${getButtonStyles(
             selectedOption.variant
           )}`}
         >
@@ -106,20 +106,19 @@ export default function ActionButtonWithDropdown({
 
       {/* Dropdown Menu */}
       {showDropdown && (
-        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 rounded-md shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-          {options.map((option, index) => (
-            <button
-              key={index}
-              onClick={(e) => handleOptionSelect(index, e)}
-              className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                index === selectedIndex
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="absolute z-50 w-full bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          {options
+            .map((option, index) => ({ option, index }))
+            .filter(({ index }) => index !== selectedIndex)
+            .map(({ option, index }) => (
+              <button
+                key={index}
+                onClick={(e) => handleOptionSelect(index, e)}
+                className="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                {option.label}
+              </button>
+            ))}
         </div>
       )}
     </div>

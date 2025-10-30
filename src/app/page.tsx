@@ -28,7 +28,7 @@ export default function Home() {
   const isSearching = search.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -47,7 +47,7 @@ export default function Home() {
             />
           </div>
           {!isSearching && (
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-2 overflow-x-auto pb-2">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.key}
@@ -67,7 +67,7 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-full mx-auto px-4 py-8">
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
