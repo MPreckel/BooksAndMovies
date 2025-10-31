@@ -46,10 +46,10 @@ export default function BooksReadingPage() {
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Libros Leyendo
+            Leyendo
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            {books.length} {books.length === 1 ? 'libro' : 'libros'} leyendo actualmente
+           Leyendo {books.length} {books.length === 1 ? 'libro' : 'libros'}  actualmente
           </p>
         </div>
       </header>

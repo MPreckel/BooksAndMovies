@@ -57,7 +57,7 @@ export default function WatchlistPage() {
       </header>
 
       {/* Main Content */}
-      <main className="bg-white dark:bg-gray-800 shadow-sm max-w-full mx-auto px-6">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
@@ -92,7 +92,7 @@ export default function WatchlistPage() {
                   year: 'numeric'
                 })}`}
                 actionButton={{
-                  label: 'Quitar de mi lista',
+                  label: 'Quitar',
                   onClick: async () => {
                     await removeMovie(movie.tmdb_id)
                   },

@@ -44,7 +44,7 @@ export default function BooksPage() {
               value={input}
               onChange={setInput}
               onDebouncedChange={setSearch}
-              placeholder="Buscar libros..."
+              placeholder="Buscar libro..."
             />
           </div>
           {!isSearching && (

@@ -86,7 +86,7 @@ export default function BooksToReadPage() {
                   year: 'numeric'
                 })}`}
                 actionButton={{
-                  label: 'Quitar de mi lista',
+                  label: 'Quitar',
                   onClick: async () => {
                     await removeBook(book.google_books_id)
                   },

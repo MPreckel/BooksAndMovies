@@ -45,7 +45,7 @@ export default function Home() {
               value={input}
               onChange={setInput}
               onDebouncedChange={setSearch}
-              placeholder="Buscar películas..."
+              placeholder="Buscar película..."
             />
           </div>
           
