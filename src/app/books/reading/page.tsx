@@ -79,6 +79,7 @@ export default function BooksReadingPage() {
                 <Card
                   key={book.id}
                   id={book.google_books_id}
+                  description={book.description || ''}
                   title={book.title}
                   subtitle={book.authors?.join(', ') || 'Autor desconocido'}
                   imageUrl={book.thumbnail || undefined}

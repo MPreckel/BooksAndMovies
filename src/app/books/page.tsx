@@ -32,14 +32,14 @@ export default function BooksPage() {
   return (
     <div className="bg-gray-50 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex flex-col gap-4 max-w-full mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {isSearching ? `Resultados para "${search}"` : currentCategory?.label || 'Libros'}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             {isSearching ? `${books.length} ${books.length !== 1 ? 'libros encontrados' : 'libro encontrado'}` : 'Explora nuestra colección de libros'}
           </p>
-          <div className="mt-4">
+          <div>
             <SearchBar
               value={input}
               onChange={setInput}
@@ -48,15 +48,15 @@ export default function BooksPage() {
             />
           </div>
           {!isSearching && (
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.key}
                   onClick={() => setCategory(cat.key)}
-                  className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${
+                  className={`cursor-pointer px-6 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200 shadow-sm ${
                     category === cat.key
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-blue-600 text-white shadow-blue-500/30 scale-105'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:shadow-md'
                   }`}
                 >
                   {cat.label}
@@ -67,7 +67,7 @@ export default function BooksPage() {
         </div>
       </header>
 
-      <main className="max-w-full mx-auto px-4 py-8">
+      <main className="bg-white dark:bg-gray-800 shadow-sm max-w-full mx-auto px-6">
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
@@ -85,7 +85,7 @@ export default function BooksPage() {
         )}
 
         {!loading && !error && books.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
             {books.map((book) => {
               const title = book.volumeInfo?.title ?? 'Sin título';
               const authors = book.volumeInfo?.authors ?? [];
@@ -116,6 +116,7 @@ export default function BooksPage() {
                               title,
                               authors,
                               thumbnail,
+                              description: book.volumeInfo?.description,
                             });
                           }
                         },
@@ -132,6 +133,7 @@ export default function BooksPage() {
                               title,
                               authors,
                               thumbnail,
+                              description: book.volumeInfo?.description,
                             });
                           }
                         },
@@ -148,6 +150,7 @@ export default function BooksPage() {
                               title,
                               authors,
                               thumbnail,
+                              description: book.volumeInfo?.description,
                             });
                           }
                         },

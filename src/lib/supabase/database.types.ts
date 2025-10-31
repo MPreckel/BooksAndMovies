@@ -42,6 +42,7 @@ export interface Database {
           tmdb_id: number
           title: string
           poster_path: string | null
+          description: string | null
           watched_date: string
           created_at: string
         }
@@ -51,6 +52,7 @@ export interface Database {
           tmdb_id: number
           title: string
           poster_path?: string | null
+          description?: string | null
           watched_date?: string
           created_at?: string
         }
@@ -60,6 +62,7 @@ export interface Database {
           tmdb_id?: number
           title?: string
           poster_path?: string | null
+          description?: string | null
           watched_date?: string
           created_at?: string
         }
@@ -71,6 +74,7 @@ export interface Database {
           tmdb_id: number
           title: string
           poster_path: string | null
+          description: string | null
           added_date: string
           created_at: string
         }
@@ -80,6 +84,7 @@ export interface Database {
           tmdb_id: number
           title: string
           poster_path?: string | null
+          description?: string | null
           added_date?: string
           created_at?: string
         }
@@ -89,6 +94,7 @@ export interface Database {
           tmdb_id?: number
           title?: string
           poster_path?: string | null
+          description?: string | null
           added_date?: string
           created_at?: string
         }
@@ -136,6 +142,7 @@ export interface Database {
           title: string
           authors: string[] | null
           thumbnail: string | null
+          description: string | null
           finished_date: string
           created_at: string
         }
@@ -146,6 +153,7 @@ export interface Database {
           title: string
           authors?: string[] | null
           thumbnail?: string | null
+          description?: string | null
           finished_date?: string
           created_at?: string
         }
@@ -156,6 +164,7 @@ export interface Database {
           title?: string
           authors?: string[] | null
           thumbnail?: string | null
+          description?: string | null
           finished_date?: string
           created_at?: string
         }
@@ -168,6 +177,7 @@ export interface Database {
           title: string
           authors: string[] | null
           thumbnail: string | null
+          description: string | null
           started_date: string
           current_page: number | null
           total_pages: number | null
@@ -180,6 +190,7 @@ export interface Database {
           title: string
           authors?: string[] | null
           thumbnail?: string | null
+          description?: string | null
           started_date?: string
           current_page?: number | null
           total_pages?: number | null
@@ -192,6 +203,7 @@ export interface Database {
           title?: string
           authors?: string[] | null
           thumbnail?: string | null
+          description?: string | null
           started_date?: string
           current_page?: number | null
           total_pages?: number | null
@@ -206,6 +218,7 @@ export interface Database {
           title: string
           authors: string[] | null
           thumbnail: string | null
+          description: string | null
           added_date: string
           created_at: string
         }
@@ -216,6 +229,7 @@ export interface Database {
           title: string
           authors?: string[] | null
           thumbnail?: string | null
+          description?: string | null
           added_date?: string
           created_at?: string
         }
@@ -226,6 +240,7 @@ export interface Database {
           title?: string
           authors?: string[] | null
           thumbnail?: string | null
+          description?: string | null
           added_date?: string
           created_at?: string
         }

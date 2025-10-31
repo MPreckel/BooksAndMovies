@@ -6,7 +6,6 @@ import { useAuth } from './useAuth'
 import type { Database } from '@/lib/supabase/database.types'
 
 type MovieToWatch = Database['public']['Tables']['movies_to_watch']['Row']
-type MovieToWatchInsert = Database['public']['Tables']['movies_to_watch']['Insert']
 
 export function useMoviesToWatch() {
   const [movies, setMovies] = useState<MovieToWatch[]>([])
@@ -45,7 +44,12 @@ export function useMoviesToWatch() {
   }, [user?.id])
 
   // Agregar película a la lista
-  const addMovie = async (movieData: Omit<MovieToWatchInsert, 'user_id' | 'id' | 'created_at' | 'added_date'>) => {
+  const addMovie = async (movieData: {
+    tmdb_id: number
+    title: string
+    poster_path?: string | null
+    description?: string | null
+  }) => {
     if (!user) {
       throw new Error('Debes iniciar sesión para agregar películas')
     }
@@ -53,6 +57,7 @@ export function useMoviesToWatch() {
     try {
       const { data, error } = await supabase
         .from('movies_to_watch')
+        // @ts-expect-error - Supabase type inference issue with insert
         .insert({
           user_id: user.id,
           ...movieData,

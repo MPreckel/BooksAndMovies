@@ -79,6 +79,7 @@ export default function BooksReadPage() {
                 id={book.google_books_id}
                 title={book.title}
                 subtitle={book.authors?.join(', ') || 'Autor desconocido'}
+                description={book.description || ''}
                 imageUrl={book.thumbnail || undefined}
                 footer={`Leído el ${new Date(book.finished_date).toLocaleDateString('es-ES', {
                   day: 'numeric',

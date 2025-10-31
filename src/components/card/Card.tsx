@@ -25,7 +25,7 @@ export default function Card({
 
   return (
     <div
-      className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4"
+      className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 border border-gray-200 dark:border-gray-700"
       onClick={onClick}
     >
       {/* Imagen */}

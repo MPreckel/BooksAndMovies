@@ -31,7 +31,7 @@ export default function Home() {
     <div className="bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-full mx-auto px-4 py-6">
+        <div className="flex flex-col gap-4 max-w-full mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {isSearching ? `Resultados para "${search}"` : currentCategory?.label || 'Películas'}
           </h1>
@@ -40,7 +40,7 @@ export default function Home() {
           </p>
           
           {/* SearchBar */}
-          <div className="mb-6">
+          <div>
             <SearchBar
               value={input}
               onChange={setInput}
@@ -71,7 +71,7 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-full mx-auto px-6">
+      <main className="bg-white dark:bg-gray-800 shadow-sm max-w-full mx-auto px-6">
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
@@ -120,6 +120,7 @@ export default function Home() {
                               tmdb_id: movie.id,
                               title: movie.title,
                               poster_path: movie.poster_path,
+                              description: movie.overview,
                             });
                           }
                         },
@@ -132,6 +133,7 @@ export default function Home() {
                               tmdb_id: movie.id,
                               title: movie.title,
                               poster_path: movie.poster_path,
+                              description: movie.overview,
                             });
                         },
                         variant: 'primary',

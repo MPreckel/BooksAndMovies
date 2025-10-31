@@ -84,6 +84,7 @@ export default function WatchedMoviesPage() {
                 key={movie.id}
                 id={movie.tmdb_id}
                 title={movie.title}
+                description={movie.description || ''}
                 imageUrl={getImageUrl(movie.poster_path)}
                 footer={`Vista el ${new Date(movie.watched_date).toLocaleDateString('es-ES', {
                   day: 'numeric',

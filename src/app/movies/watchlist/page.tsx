@@ -57,7 +57,7 @@ export default function WatchlistPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="bg-white dark:bg-gray-800 shadow-sm max-w-full mx-auto px-6">
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
@@ -84,6 +84,7 @@ export default function WatchlistPage() {
                 key={movie.id}
                 id={movie.tmdb_id}
                 title={movie.title}
+                description={movie.description || ''}
                 imageUrl={getImageUrl(movie.poster_path)}
                 footer={`Agregada el ${new Date(movie.added_date).toLocaleDateString('es-ES', {
                   day: 'numeric',
