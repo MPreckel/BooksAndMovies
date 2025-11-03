@@ -111,6 +111,10 @@ export default function BooksPage() {
                           if (inToReadList) {
                             await removeFromToRead(book.id);
                           } else {
+                            // Remover de otras listas antes de agregar
+                            if (inReadingList) await removeFromReading(book.id);
+                            if (inReadList) await removeFromRead(book.id);
+                            
                             await addToRead({
                               google_books_id: book.id,
                               title,
@@ -128,6 +132,10 @@ export default function BooksPage() {
                           if (inReadingList) {
                             await removeFromReading(book.id);
                           } else {
+                            // Remover de otras listas antes de agregar
+                            if (inToReadList) await removeFromToRead(book.id);
+                            if (inReadList) await removeFromRead(book.id);
+                            
                             await addToReading({
                               google_books_id: book.id,
                               title,
@@ -145,6 +153,10 @@ export default function BooksPage() {
                           if (inReadList) {
                             await removeFromRead(book.id);
                           } else {
+                            // Remover de otras listas antes de agregar
+                            if (inToReadList) await removeFromToRead(book.id);
+                            if (inReadingList) await removeFromReading(book.id);
+                            
                             await addToReadBooks({
                               google_books_id: book.id,
                               title,
@@ -157,7 +169,6 @@ export default function BooksPage() {
                         variant: inReadList ? 'secondary' : 'primary',
                       },
                     ],
-                    defaultOption: 0,
                   }}
                 />
               );
