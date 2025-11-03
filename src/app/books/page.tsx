@@ -30,7 +30,7 @@ export default function BooksPage() {
   const isSearching = search.trim().length > 0;
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900">
+    <div className="mt-12 bg-gray-50 dark:bg-gray-900">
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="flex flex-col gap-4 max-w-full mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
