@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { CardProps } from './Card.interface';
+import ActionButtonWithDropdown from './ActionButtonWithDropdown';
 
 export default function Card({
   title,
@@ -9,17 +10,27 @@ export default function Card({
   rating,
   footer,
   onClick,
+  actionButton,
+  actionButtonWithOptions,
 }: CardProps) {
+  const getButtonStyles = (variant: 'primary' | 'secondary' | 'danger' = 'primary') => {
+    const baseStyles = 'w-full py-2 px-4 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+    const variants = {
+      primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+      secondary: 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white',
+      danger: 'bg-red-600 hover:bg-red-700 text-white',
+    };
+    return `${baseStyles} ${variants[variant]}`;
+  };
+
   return (
     <div
-      className={`bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105 ${
-        onClick ? 'cursor-pointer' : ''
-      }`}
+      className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 border border-gray-200 dark:border-gray-700"
       onClick={onClick}
     >
       {/* Imagen */}
       {imageUrl && (
-        <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700">
+        <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg">
           <Image
             src={imageUrl}
             alt={title}
@@ -31,10 +42,10 @@ export default function Card({
       )}
 
       {/* Contenido */}
-      <div className="p-4">
+      <div className="flex flex-col p-4 min-h-[280px]">
         {/* Título y Rating */}
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 flex-1">
+        <div className="flex justify-between">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 ">
             {title}
           </h3>
           {rating !== undefined && (
@@ -65,6 +76,35 @@ export default function Card({
         {footer && (
           <div className="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
             {footer}
+          </div>
+        )}
+
+        {/* Action Button */}
+        {actionButton && !actionButtonWithOptions && (
+          <div className="mt-auto pt-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                actionButton.onClick(e);
+              }}
+              disabled={actionButton.disabled}
+              className={getButtonStyles(actionButton.variant)}
+            >
+              {actionButton.label}
+            </button>
+          </div>
+        )}
+
+        {/* Action Button with Dropdown */}
+        {actionButtonWithOptions && (
+          <div className="flex justify-center mt-auto pt-3">
+            <ActionButtonWithDropdown
+              options={actionButtonWithOptions.options}
+              defaultOption={actionButtonWithOptions.defaultOption}
+              disabled={actionButtonWithOptions.disabled}
+              mainLabel={actionButtonWithOptions.mainLabel}
+              mainVariant={actionButtonWithOptions.mainVariant}
+            />
           </div>
         )}
       </div>

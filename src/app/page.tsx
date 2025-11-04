@@ -2,6 +2,8 @@
 
 import Card from '@/components/card/Card';
 import { useMovies, getImageUrl } from '@/hooks/useMovies';
+import { useMoviesToWatch } from '@/hooks/useMoviesToWatch';
+import { useMoviesWatched } from '@/hooks/useMoviesWatched';
 import { useState } from 'react';
 import SearchBar from '@/components/searchbar/SearchBar';
 
@@ -19,39 +21,45 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
   const { movies, loading, error } = useMovies({ endpoint: category, search });
+  const { addMovie: addToWatch, removeMovie: removeFromWatch, isMovieInList } = useMoviesToWatch();
+  const { addMovie: addToWatched, removeMovie: removeFromWatched, isMovieWatched } = useMoviesWatched();
 
   const currentCategory = CATEGORIES.find((c) => c.key === category);
   const isSearching = search.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="mt-12 bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex flex-col gap-4 max-w-full mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {isSearching ? `Resultados para "${search}"` : currentCategory?.label || 'Películas'}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             {isSearching ? `${movies.length} ${movies.length > 1 ? 'películas encontradas' : 'película encontrada'}` : 'Descubre las mejores películas'}
           </p>
-          <div className="mt-4">
+          
+          {/* SearchBar */}
+          <div>
             <SearchBar
               value={input}
               onChange={setInput}
               onDebouncedChange={setSearch}
-              placeholder="Buscar películas..."
+              placeholder="Buscar película..."
             />
           </div>
+          
+          {/* Category Buttons */}
           {!isSearching && (
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.key}
                   onClick={() => setCategory(cat.key)}
-                  className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${
+                  className={`cursor-pointer px-6 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200 shadow-sm ${
                     category === cat.key
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-blue-600 text-white shadow-blue-500/30 scale-105'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 hover:shadow-md'
                   }`}
                 >
                   {cat.label}
@@ -63,7 +71,7 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="bg-white dark:bg-gray-800 shadow-sm max-w-full mx-auto px-6">
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center min-h-[400px]">
@@ -84,20 +92,69 @@ export default function Home() {
 
         {/* Movies Grid */}
         {!loading && !error && movies.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {movies.map((movie) => (
-              <Card
-                key={movie.id}
-                id={movie.id}
-                title={movie.title}
-                subtitle={new Date(movie.release_date).getFullYear().toString()}
-                description={movie.overview}
-                imageUrl={getImageUrl(movie.poster_path)}
-                rating={movie.vote_average}
-                footer={`${movie.vote_count.toLocaleString()} votos`}
-                onClick={() => console.log('Película seleccionada:', movie.title)}
-              />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            {movies.map((movie) => {
+              const inWatchlist = isMovieInList(movie.id);
+              const watched = isMovieWatched(movie.id);
+              
+              // Determinar el label principal basado en el estado actual
+              const getMainLabel = () => {
+                if (watched) return '✓ Vista';
+                if (inWatchlist) return '✓ En mi lista';
+                return 'POR VER';
+              };
+
+              // Determinar el variant del botón principal
+              const mainVariant = (inWatchlist || watched) ? 'secondary' : 'primary';
+
+              return (
+                <Card
+                  key={movie.id}
+                  id={movie.id}
+                  title={movie.title}
+                  subtitle={new Date(movie.release_date).getFullYear().toString()}
+                  description={movie.overview}
+                  imageUrl={getImageUrl(movie.poster_path)}
+                  rating={movie.vote_average}
+                  footer={`${movie.vote_count.toLocaleString()} votos`}
+                  onClick={() => console.log('Película seleccionada:', movie.title)}
+                  actionButtonWithOptions={{
+                    mainLabel: getMainLabel(),
+                    mainVariant,
+                    options: [
+                      {
+                        label: 'POR VER',
+                        onClick: async () => {
+                          // Remover de "Ya vistas" antes de agregar a "Por ver"
+                          if (watched) await removeFromWatched(movie.id);
+                          
+                          await addToWatch({
+                            tmdb_id: movie.id,
+                            title: movie.title,
+                            poster_path: movie.poster_path,
+                            description: movie.overview,
+                          });
+                        },
+                      },
+                      {
+                        label: 'YA VISTA',
+                        onClick: async () => {
+                          // Remover de "Por ver" antes de agregar a "Ya vistas"
+                          if (inWatchlist) await removeFromWatch(movie.id);
+                          
+                          await addToWatched({
+                            tmdb_id: movie.id,
+                            title: movie.title,
+                            poster_path: movie.poster_path,
+                            description: movie.overview,
+                          });
+                        },
+                      },
+                    ],
+                  }}
+                />
+              );
+            })}
           </div>
         )}
 
