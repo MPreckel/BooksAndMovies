@@ -99,7 +99,7 @@ export default function BooksReadingPage() {
                     </div>
                   }
                   actionButton={{
-                    label: 'Quitar de leyendo',
+                    label: 'Quitar',
                     onClick: async () => {
                       await removeBook(book.google_books_id)
                     },

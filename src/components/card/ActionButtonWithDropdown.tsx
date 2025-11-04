@@ -12,18 +12,24 @@ interface ActionButtonWithDropdownProps {
   options: ActionOption[]
   defaultOption?: number
   disabled?: boolean
+  mainLabel?: string
+  mainVariant?: 'primary' | 'secondary' | 'danger'
 }
 
 export default function ActionButtonWithDropdown({
   options,
   defaultOption = 0,
   disabled = false,
+  mainLabel,
+  mainVariant,
 }: ActionButtonWithDropdownProps) {
   const [selectedIndex, setSelectedIndex] = useState(defaultOption)
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const selectedOption = options[selectedIndex]
+  const displayLabel = mainLabel ?? selectedOption.label
+  const displayVariant = mainVariant ?? selectedOption.variant
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -53,7 +59,13 @@ export default function ActionButtonWithDropdown({
   const handleMainClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (!disabled) {
-      selectedOption.onClick()
+      // Si hay mainLabel, no ejecutar ninguna acción al hacer click principal
+      // El usuario debe usar el dropdown para seleccionar una acción
+      if (!mainLabel) {
+        selectedOption.onClick()
+      } else {
+        setShowDropdown(!showDropdown)
+      }
     }
   }
 
@@ -79,10 +91,10 @@ export default function ActionButtonWithDropdown({
           onClick={handleMainClick}
           disabled={disabled}
           className={`cursor-pointer flex-1 py-2 px-4 rounded-l-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${getButtonStyles(
-            selectedOption.variant
+            displayVariant
           )}`}
         >
-          {selectedOption.label}
+          {displayLabel}
         </button>
 
         {/* Dropdown Toggle */}
@@ -90,7 +102,7 @@ export default function ActionButtonWithDropdown({
           onClick={handleDropdownToggle}
           disabled={disabled}
           className={`cursor-pointer p-2 rounded-r-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none ${getButtonStyles(
-            selectedOption.variant
+            displayVariant
           )}`}
         >
           <svg
@@ -109,7 +121,7 @@ export default function ActionButtonWithDropdown({
         <div className="absolute z-50 w-full bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           {options
             .map((option, index) => ({ option, index }))
-            .filter(({ index }) => index !== selectedIndex)
+            .filter(({ index }) => mainLabel ? true : index !== selectedIndex)
             .map(({ option, index }) => (
               <button
                 key={index}

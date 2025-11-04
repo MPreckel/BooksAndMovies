@@ -94,6 +94,17 @@ export default function BooksPage() {
               const inReadingList = isBookReading(book.id);
               const inReadList = isBookRead(book.id);
 
+              // Determinar el label principal basado en el estado actual
+              const getMainLabel = () => {
+                if (inReadingList) return '✓ Leyendo';
+                if (inReadList) return '✓ Leído';
+                if (inToReadList) return '✓ En mi lista';
+                return 'POR LEER';
+              };
+
+              // Determinar el variant del botón principal
+              const mainVariant = (inToReadList || inReadingList || inReadList) ? 'secondary' : 'primary';
+
               return (
                 <Card
                   key={book.id}
@@ -104,69 +115,56 @@ export default function BooksPage() {
                   onClick={() => console.log('Libro seleccionado:', title)}
                   description={book.volumeInfo?.description}
                   actionButtonWithOptions={{
+                    mainLabel: getMainLabel(),
+                    mainVariant,
                     options: [
                       {
-                        label: inToReadList ? '✓ En mi lista' : 'LEER',
+                        label: 'POR LEER',
                         onClick: async () => {
-                          if (inToReadList) {
-                            await removeFromToRead(book.id);
-                          } else {
-                            // Remover de otras listas antes de agregar
-                            if (inReadingList) await removeFromReading(book.id);
-                            if (inReadList) await removeFromRead(book.id);
-                            
-                            await addToRead({
-                              google_books_id: book.id,
-                              title,
-                              authors,
-                              thumbnail,
-                              description: book.volumeInfo?.description,
-                            });
-                          }
+                          // Remover de otras listas antes de agregar
+                          if (inReadingList) await removeFromReading(book.id);
+                          if (inReadList) await removeFromRead(book.id);
+                          
+                          await addToRead({
+                            google_books_id: book.id,
+                            title,
+                            authors,
+                            thumbnail,
+                            description: book.volumeInfo?.description,
+                          });
                         },
-                        variant: inToReadList ? 'secondary' : 'primary',
                       },
                       {
-                        label: inReadingList ? '✓ Leyendo' : 'LEYENDO',
+                        label: 'LEYENDO',
                         onClick: async () => {
-                          if (inReadingList) {
-                            await removeFromReading(book.id);
-                          } else {
-                            // Remover de otras listas antes de agregar
-                            if (inToReadList) await removeFromToRead(book.id);
-                            if (inReadList) await removeFromRead(book.id);
-                            
-                            await addToReading({
-                              google_books_id: book.id,
-                              title,
-                              authors,
-                              thumbnail,
-                              description: book.volumeInfo?.description,
-                            });
-                          }
+                          // Remover de otras listas antes de agregar
+                          if (inToReadList) await removeFromToRead(book.id);
+                          if (inReadList) await removeFromRead(book.id);
+                          
+                          await addToReading({
+                            google_books_id: book.id,
+                            title,
+                            authors,
+                            thumbnail,
+                            description: book.volumeInfo?.description,
+                          });
                         },
-                        variant: inReadingList ? 'secondary' : 'primary',
                       },
                       {
-                        label: inReadList ? '✓ Leído' : 'LEÍDO',
+                        label: 'LEÍDO',
                         onClick: async () => {
-                          if (inReadList) {
-                            await removeFromRead(book.id);
-                          } else {
-                            // Remover de otras listas antes de agregar
-                            if (inToReadList) await removeFromToRead(book.id);
-                            if (inReadingList) await removeFromReading(book.id);
-                            
-                            await addToReadBooks({
-                              google_books_id: book.id,
-                              title,
-                              authors,
-                              thumbnail,
-                              description: book.volumeInfo?.description,
-                            });
-                          }
+                          // Remover de otras listas antes de agregar
+                          if (inToReadList) await removeFromToRead(book.id);
+                          if (inReadingList) await removeFromReading(book.id);
+                          
+                          await addToReadBooks({
+                            google_books_id: book.id,
+                            title,
+                            authors,
+                            thumbnail,
+                            description: book.volumeInfo?.description,
+                          });
                         },
-                        variant: inReadList ? 'secondary' : 'primary',
                       },
                     ],
                   }}

@@ -97,6 +97,16 @@ export default function Home() {
               const inWatchlist = isMovieInList(movie.id);
               const watched = isMovieWatched(movie.id);
               
+              // Determinar el label principal basado en el estado actual
+              const getMainLabel = () => {
+                if (watched) return '✓ Vista';
+                if (inWatchlist) return '✓ En mi lista';
+                return 'POR VER';
+              };
+
+              // Determinar el variant del botón principal
+              const mainVariant = (inWatchlist || watched) ? 'secondary' : 'primary';
+
               return (
                 <Card
                   key={movie.id}
@@ -109,44 +119,36 @@ export default function Home() {
                   footer={`${movie.vote_count.toLocaleString()} votos`}
                   onClick={() => console.log('Película seleccionada:', movie.title)}
                   actionButtonWithOptions={{
+                    mainLabel: getMainLabel(),
+                    mainVariant,
                     options: [
                       {
-                        label: inWatchlist ? '✓ En mi lista' : 'VER',
+                        label: 'POR VER',
                         onClick: async () => {
-                          if (inWatchlist) {
-                            await removeFromWatch(movie.id);
-                          } else {
-                            // Remover de "Ya vistas" antes de agregar a "Por ver"
-                            if (watched) await removeFromWatched(movie.id);
-                            
-                            await addToWatch({
-                              tmdb_id: movie.id,
-                              title: movie.title,
-                              poster_path: movie.poster_path,
-                              description: movie.overview,
-                            });
-                          }
+                          // Remover de "Ya vistas" antes de agregar a "Por ver"
+                          if (watched) await removeFromWatched(movie.id);
+                          
+                          await addToWatch({
+                            tmdb_id: movie.id,
+                            title: movie.title,
+                            poster_path: movie.poster_path,
+                            description: movie.overview,
+                          });
                         },
-                        variant: inWatchlist ? 'secondary' : 'primary',
                       },
                       {
-                        label: watched ? '✓ Vista' : 'YA VISTA',
+                        label: 'YA VISTA',
                         onClick: async () => {
-                          if (watched) {
-                            await removeFromWatched(movie.id);
-                          } else {
-                            // Remover de "Por ver" antes de agregar a "Ya vistas"
-                            if (inWatchlist) await removeFromWatch(movie.id);
-                            
-                            await addToWatched({
-                              tmdb_id: movie.id,
-                              title: movie.title,
-                              poster_path: movie.poster_path,
-                              description: movie.overview,
-                            });
-                          }
+                          // Remover de "Por ver" antes de agregar a "Ya vistas"
+                          if (inWatchlist) await removeFromWatch(movie.id);
+                          
+                          await addToWatched({
+                            tmdb_id: movie.id,
+                            title: movie.title,
+                            poster_path: movie.poster_path,
+                            description: movie.overview,
+                          });
                         },
-                        variant: watched ? 'secondary' : 'primary',
                       },
                     ],
                   }}

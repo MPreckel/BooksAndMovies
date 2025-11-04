@@ -20,5 +20,7 @@ export interface CardProps {
     options: ActionOption[];
     defaultOption?: number;
     disabled?: boolean;
+    mainLabel?: string;
+    mainVariant?: 'primary' | 'secondary' | 'danger';
   };
 }

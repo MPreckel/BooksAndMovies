@@ -92,7 +92,7 @@ export default function WatchedMoviesPage() {
                   year: 'numeric'
                 })}`}
                 actionButton={{
-                  label: 'Quitar de vistas',
+                  label: 'Quitar',
                   onClick: async () => {
                     await removeMovie(movie.tmdb_id)
                   },

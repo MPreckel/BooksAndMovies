@@ -102,6 +102,8 @@ export default function Card({
               options={actionButtonWithOptions.options}
               defaultOption={actionButtonWithOptions.defaultOption}
               disabled={actionButtonWithOptions.disabled}
+              mainLabel={actionButtonWithOptions.mainLabel}
+              mainVariant={actionButtonWithOptions.mainVariant}
             />
           </div>
         )}
