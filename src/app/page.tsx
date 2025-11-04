@@ -116,6 +116,9 @@ export default function Home() {
                           if (inWatchlist) {
                             await removeFromWatch(movie.id);
                           } else {
+                            // Remover de "Ya vistas" antes de agregar a "Por ver"
+                            if (watched) await removeFromWatched(movie.id);
+                            
                             await addToWatch({
                               tmdb_id: movie.id,
                               title: movie.title,
@@ -127,19 +130,25 @@ export default function Home() {
                         variant: inWatchlist ? 'secondary' : 'primary',
                       },
                       {
-                        label: 'YA VISTA',
+                        label: watched ? '✓ Vista' : 'YA VISTA',
                         onClick: async () => {
+                          if (watched) {
+                            await removeFromWatched(movie.id);
+                          } else {
+                            // Remover de "Por ver" antes de agregar a "Ya vistas"
+                            if (inWatchlist) await removeFromWatch(movie.id);
+                            
                             await addToWatched({
                               tmdb_id: movie.id,
                               title: movie.title,
                               poster_path: movie.poster_path,
                               description: movie.overview,
                             });
+                          }
                         },
-                        variant: 'primary',
+                        variant: watched ? 'secondary' : 'primary',
                       },
                     ],
-                    defaultOption: 0,
                   }}
                 />
               );
