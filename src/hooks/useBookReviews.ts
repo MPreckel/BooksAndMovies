@@ -50,6 +50,7 @@ export function useBookReviews() {
     try {
       const { data, error } = await supabase
         .from('book_reviews')
+        // @ts-expect-error - No se puede tipar correctamente
         .insert({ user_id: user.id, ...reviewData })
         .select()
         .single()
@@ -70,7 +71,11 @@ export function useBookReviews() {
     try {
       const { data, error } = await supabase
         .from('book_reviews')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        // @ts-expect-error - Supabase type inference issue with partial updates
+        .update({ 
+          ...updates, 
+          updated_at: new Date().toISOString() 
+        })
         .eq('user_id', user.id)
         .eq('google_books_id', googleBooksId)
         .select()

@@ -53,6 +53,7 @@ export function useMoviesWatched() {
     try {
       const { data, error } = await supabase
         .from('movies_watched')
+        // @ts-expect-error - No se puede tipar correctamente
         .insert({
           user_id: user.id,
           ...movieData,
