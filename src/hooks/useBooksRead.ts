@@ -53,6 +53,7 @@ export function useBooksRead() {
     try {
       const { data, error } = await supabase
         .from('books_read')
+        // @ts-expect-error - No se puede tipar correctamente
         .insert({
           user_id: user.id,
           ...bookData,
