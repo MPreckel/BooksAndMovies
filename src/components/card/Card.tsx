@@ -30,7 +30,7 @@ export default function Card({
     >
       {/* Imagen */}
       {imageUrl && (
-        <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg">
+        <div className="relative w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg">
           <Image
             src={imageUrl}
             alt={title}
