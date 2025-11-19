@@ -25,12 +25,14 @@ export default function Card({
 
   return (
     <div
-      className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 border border-gray-200 dark:border-gray-700"
-      onClick={onClick}
+      className="bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700"
     >
       {/* Imagen */}
       {imageUrl && (
-        <div className="relative w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg">
+        <div 
+          className="relative w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={onClick}
+        >
           <Image
             src={imageUrl}
             alt={title}
@@ -44,7 +46,7 @@ export default function Card({
       {/* Contenido */}
       <div className="flex flex-col p-4 min-h-[280px]">
         {/* Título y Rating */}
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 ">
             {title}
           </h3>
@@ -56,28 +58,28 @@ export default function Card({
               </span>
             </div>
           )}
-        </div>
+        </div> */}
 
-        {/* Subtítulo */}
+        {/* Subtítulo
         {subtitle && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
             {subtitle}
           </p>
-        )}
+        )} */}
 
         {/* Descripción */}
-        {description && (
+        {/* {description && (
           <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 mb-3">
             {description}
           </p>
-        )}
+        )} */}
 
         {/* Footer */}
-        {footer && (
+        {/* {footer && (
           <div className="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
             {footer}
           </div>
-        )}
+        )} */}
 
         {/* Action Button */}
         {actionButton && !actionButtonWithOptions && (
