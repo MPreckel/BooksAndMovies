@@ -1,8 +1,6 @@
-'use client';
-
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface BookDetails {
   id: string;
@@ -30,68 +28,37 @@ interface BookDetails {
   };
 }
 
-export default function BookDetailPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const bookId = searchParams.get('id');
-  const [book, setBook] = useState<BookDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface BookDetailPageProps {
+  searchParams: Promise<{ id?: string }>;
+}
 
-  useEffect(() => {
-    const fetchBookDetails = async () => {
-      try {
-        setLoading(true);
-        
-        const response = await fetch(
-          `https://www.googleapis.com/books/v1/volumes/${bookId}`
-        );
-        
-        if (!response.ok) {
-          throw new Error('Error al cargar los detalles del libro');
-        }
-        
-        const data = await response.json();
-        setBook(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (bookId) {
-      fetchBookDetails();
+async function fetchBookDetails(bookId: string): Promise<BookDetails> {
+  const response = await fetch(
+    `https://www.googleapis.com/books/v1/volumes/${bookId}`,
+    {
+      next: { revalidate: 3600 }, // Revalidar cada hora
     }
-  }, [bookId]);
+  );
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Cargando detalles...</p>
-        </div>
-      </div>
-    );
+  if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
+    throw new Error('Error al cargar los detalles del libro');
   }
 
-  if (error || !book) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md">
-          <h3 className="text-red-800 dark:text-red-200 font-semibold mb-2">Error</h3>
-          <p className="text-red-600 dark:text-red-300">{error || 'Libro no encontrado'}</p>
-          <button
-            onClick={() => router.back()}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Volver
-          </button>
-        </div>
-      </div>
-    );
+  return response.json();
+}
+
+export default async function BookDetailPage({ searchParams }: BookDetailPageProps) {
+  const params = await searchParams;
+  const bookId = params.id;
+
+  if (!bookId) {
+    notFound();
   }
+
+  const book = await fetchBookDetails(bookId);
 
   const { volumeInfo } = book;
   const thumbnail = volumeInfo.imageLinks?.large || 
@@ -119,12 +86,12 @@ export default function BookDetailPage() {
 
           {/* Details */}
           <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <button
-              onClick={() => router.back()}
-              className="mb-4 text-blue-600 dark:text-blue-400 hover:underline"
+            <Link
+              href="/books"
+              className="mb-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
             >
               ← Volver
-            </button>
+            </Link>
 
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {volumeInfo.title}

@@ -1,9 +1,7 @@
-'use client';
-
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { getImageUrl } from '@/hooks/useMovies';
+import Link from 'next/link';
+import { getImageUrl } from '@/utils/tmdb';
 
 interface MovieDetails {
   id: number;
@@ -20,68 +18,43 @@ interface MovieDetails {
   tagline: string;
 }
 
-export default function MovieDetailPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const movieId = searchParams.get('id');
-  const [movie, setMovie] = useState<MovieDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface MovieDetailPageProps {
+  searchParams: Promise<{ id?: string }>;
+}
 
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        setLoading(true);
-        
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=es-ES`
-        );
-        
-        if (!response.ok) {
-          throw new Error('Error al cargar los detalles de la película');
-        }
-        
-        const data = await response.json();
-        setMovie(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-      } finally {
-        setLoading(false);
-      }
-    };
+async function fetchMovieDetails(movieId: string): Promise<MovieDetails> {
+  const apiKey = process.env.TMDB_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('TMDB API Key no configurada');
+  }
 
-    if (movieId) {
-      fetchMovieDetails();
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=es-ES`,
+    {
+      next: { revalidate: 3600 }, // Revalidar cada hora
     }
-  }, [movieId]);
+  );
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Cargando detalles...</p>
-        </div>
-      </div>
-    );
+  if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
+    throw new Error('Error al cargar los detalles de la película');
   }
 
-  if (error || !movie) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md">
-          <h3 className="text-red-800 dark:text-red-200 font-semibold mb-2">Error</h3>
-          <p className="text-red-600 dark:text-red-300">{error || 'Película no encontrada'}</p>
-          <button
-            onClick={() => router.back()}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Volver
-          </button>
-        </div>
-      </div>
-    );
+  return response.json();
+}
+
+export default async function MovieDetailPage({ searchParams }: MovieDetailPageProps) {
+  const params = await searchParams;
+  const movieId = params.id;
+
+  if (!movieId) {
+    notFound();
   }
+
+  const movie = await fetchMovieDetails(movieId);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -118,12 +91,12 @@ export default function MovieDetailPage() {
 
           {/* Details */}
           <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <button
-              onClick={() => router.back()}
-              className="mb-4 text-blue-600 dark:text-blue-400 hover:underline"
+            <Link
+              href="/"
+              className="mb-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
             >
               ← Volver
-            </button>
+            </Link>
 
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {movie.title}
