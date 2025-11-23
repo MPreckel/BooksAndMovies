@@ -6,6 +6,8 @@ import { useMoviesToWatch } from '@/hooks/useMoviesToWatch';
 import { useMoviesWatched } from '@/hooks/useMoviesWatched';
 import { useState } from 'react';
 import SearchBar from '@/components/searchbar/SearchBar';
+import { useRouter } from 'next/navigation';
+import { createMovieUrl } from '@/utils/slug';
 
 type MovieCategory = 'popular' | 'now_playing' | 'top_rated' | 'upcoming';
 
@@ -17,6 +19,7 @@ const CATEGORIES: { key: MovieCategory; label: string }[] = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [category, setCategory] = useState<MovieCategory>('popular');
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
@@ -113,11 +116,10 @@ export default function Home() {
                   id={movie.id}
                   title={movie.title}
                   subtitle={new Date(movie.release_date).getFullYear().toString()}
-                  description={movie.overview}
                   imageUrl={getImageUrl(movie.poster_path)}
                   rating={movie.vote_average}
                   footer={`${movie.vote_count.toLocaleString()} votos`}
-                  onClick={() => console.log('Película seleccionada:', movie.title)}
+                  onClick={() => router.push(`/movies/${createMovieUrl(movie.id, movie.title)}`)}
                   actionButtonWithOptions={{
                     mainLabel: getMainLabel(),
                     mainVariant,

@@ -7,6 +7,8 @@ import { useBooksRead } from '@/hooks/useBooksRead';
 import { useState } from 'react';
 import SearchBar from '@/components/searchbar/SearchBar';
 import Card from '@/components/card/Card';
+import { useRouter } from 'next/navigation';
+import { createBookUrl } from '@/utils/slug';
 
 const CATEGORIES: { key: BookCategory; label: string }[] = [
   { key: 'fiction', label: 'Ficción' },
@@ -18,6 +20,7 @@ const CATEGORIES: { key: BookCategory; label: string }[] = [
 ];
 
 export default function BooksPage() {
+  const router = useRouter();
   const [category, setCategory] = useState<BookCategory>('fiction');
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
@@ -112,7 +115,7 @@ export default function BooksPage() {
                   title={title}
                   subtitle={authors.length ? authors.join(', ') : 'Autor desconocido'}
                   imageUrl={thumbnail || undefined}
-                  onClick={() => console.log('Libro seleccionado:', title)}
+                  onClick={() => router.push(`/books/${createBookUrl(book.id, title)}`)}
                   description={book.volumeInfo?.description}
                   actionButtonWithOptions={{
                     mainLabel: getMainLabel(),
