@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getImageUrl } from '@/utils/tmdb';
+import MovieReviewForm from '@/components/reviews/MovieReviewForm';
 
 interface MovieDetails {
   id: number;
@@ -65,7 +66,7 @@ export default async function MovieDetailPage({ searchParams }: MovieDetailPageP
             src={getImageUrl(movie.backdrop_path, 'original')}
             alt={movie.title}
             fill
-            className="object-cover"
+            className="object-fill"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-50 dark:from-gray-900 via-transparent to-transparent" />
@@ -180,6 +181,15 @@ export default async function MovieDetailPage({ searchParams }: MovieDetailPageP
               </div>
             )}
           </div>
+        </div>
+
+        {/* Review Section */}
+        <div className="mt-8">
+          <MovieReviewForm
+            movieId={movie.id}
+            movieTitle={movie.title}
+            posterPath={movie.poster_path}
+          />
         </div>
       </div>
     </div>
