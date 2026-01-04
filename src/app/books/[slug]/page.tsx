@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import BookReviewForm from '@/components/reviews/BookReviewForm';
 
 interface BookDetails {
   id: string;
@@ -181,32 +182,17 @@ export default async function BookDetailPage({ searchParams }: BookDetailPagePro
                 </p>
               </div>
             )}
-
-            {(volumeInfo.previewLink || volumeInfo.infoLink) && (
-              <div className="flex gap-4 mt-6">
-                {volumeInfo.previewLink && (
-                  <a
-                    href={volumeInfo.previewLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                  >
-                    Vista previa
-                  </a>
-                )}
-                {volumeInfo.infoLink && (
-                  <a
-                    href={volumeInfo.infoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    Más información
-                  </a>
-                )}
-              </div>
-            )}
           </div>
+        </div>
+
+        {/* Review Section */}
+        <div className="mt-8">
+          <BookReviewForm
+            bookId={book.id}
+            bookTitle={volumeInfo.title}
+            authors={volumeInfo.authors}
+            thumbnail={thumbnail}
+          />
         </div>
       </div>
     </div>

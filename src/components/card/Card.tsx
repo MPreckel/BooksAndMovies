@@ -25,26 +25,26 @@ export default function Card({
 
   return (
     <div
-      className="bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700"
+      className="bg-white dark:bg-gray-800 shadow-md rounded-lg dark:border-gray-700"
     >
       {/* Imagen */}
       {imageUrl && (
         <div 
-          className="relative w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg cursor-pointer hover:opacity-90 transition-opacity"
+          className="relative w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 overflow-hidden rounded-t-lg cursor-pointer hover:opacity-90 transition-opacity border border-gray-200 dark:border-gray-700"
           onClick={onClick}
         >
           <Image
             src={imageUrl}
             alt={title}
             fill
-            className="object-cover"
+            className="object-contain"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       )}
 
       {/* Contenido */}
-      <div className="flex flex-col p-4 min-h-[280px]">
+      <div className="flex flex-col p-4">
         {/* Título y Rating */}
         {/* <div className="flex justify-between">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 ">
