@@ -4,8 +4,11 @@ import { useBooksRead } from '@/hooks/useBooksRead'
 import { useAuth } from '@/hooks/useAuth'
 import Card from '@/components/card/Card'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createBookUrl } from '@/utils/slug'
 
 export default function BooksReadPage() {
+  const router = useRouter()
   const { user, loading: authLoading } = useAuth()
   const { books, loading, error, removeBook } = useBooksRead()
 
@@ -86,6 +89,7 @@ export default function BooksReadPage() {
                   month: 'long',
                   year: 'numeric'
                 })}`}
+                onClick={() => router.push(`/books/${createBookUrl(book.google_books_id, book.title)}`)}
                 actionButton={{
                   label: 'Quitar',
                   onClick: async () => {
