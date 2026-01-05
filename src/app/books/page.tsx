@@ -88,11 +88,16 @@ export default function BooksPage() {
         )}
 
         {!loading && !error && books.length > 0 && (
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6">
             {books.map((book) => {
               const title = book.volumeInfo?.title ?? 'Sin título';
               const authors = book.volumeInfo?.authors ?? [];
-              const thumbnail = book.volumeInfo?.imageLinks?.thumbnail || book.volumeInfo?.imageLinks?.smallThumbnail || null;
+              const thumbnail = book.volumeInfo?.imageLinks?.large || 
+                                book.volumeInfo?.imageLinks?.medium || 
+                                book.volumeInfo?.imageLinks?.small || 
+                                book.volumeInfo?.imageLinks?.thumbnail || 
+                                book.volumeInfo?.imageLinks?.smallThumbnail || 
+                                null;
               const inToReadList = isBookInList(book.id);
               const inReadingList = isBookReading(book.id);
               const inReadList = isBookRead(book.id);

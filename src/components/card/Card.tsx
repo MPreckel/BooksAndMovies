@@ -14,7 +14,7 @@ export default function Card({
   actionButtonWithOptions,
 }: CardProps) {
   const getButtonStyles = (variant: 'primary' | 'secondary' | 'danger' = 'primary') => {
-    const baseStyles = 'w-full py-2 px-4 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseStyles = 'w-full py-2 px-4 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
     const variants = {
       primary: 'bg-blue-600 hover:bg-blue-700 text-white',
       secondary: 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white',
