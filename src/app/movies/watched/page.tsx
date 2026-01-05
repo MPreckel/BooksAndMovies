@@ -5,8 +5,11 @@ import { useAuth } from '@/hooks/useAuth'
 import Card from '@/components/card/Card'
 import { getImageUrl } from '@/hooks/useMovies'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createMovieUrl } from '@/utils/slug'
 
 export default function WatchedMoviesPage() {
+  const router = useRouter()
   const { user, loading: authLoading } = useAuth()
   const { movies, loading, error, removeMovie } = useMoviesWatched()
 
@@ -91,6 +94,7 @@ export default function WatchedMoviesPage() {
                   month: 'long',
                   year: 'numeric'
                 })}`}
+                onClick={() => router.push(`/movies/${createMovieUrl(movie.tmdb_id, movie.title)}`)}
                 actionButton={{
                   label: 'Quitar',
                   onClick: async () => {

@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { getImageUrl } from '@/utils/tmdb';
 import MovieReviewForm from '@/components/reviews/MovieReviewForm';
+import BackButton from '@/components/navigation/BackButton';
 
 interface MovieDetails {
   id: number;
@@ -92,12 +92,7 @@ export default async function MovieDetailPage({ searchParams }: MovieDetailPageP
 
           {/* Details */}
           <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <Link
-              href="/"
-              className="mb-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ← Volver
-            </Link>
+            <BackButton fallbackUrl="/" />
 
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {movie.title}
