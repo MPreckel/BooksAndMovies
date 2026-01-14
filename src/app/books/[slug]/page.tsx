@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import BookReviewForm from '@/components/reviews/BookReviewForm';
+import BackButton from '@/components/navigation/BackButton';
 
 interface BookDetails {
   id: string;
@@ -68,7 +68,7 @@ export default async function BookDetailPage({ searchParams }: BookDetailPagePro
                     volumeInfo.imageLinks?.thumbnail;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-16">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Cover */}
@@ -87,12 +87,7 @@ export default async function BookDetailPage({ searchParams }: BookDetailPagePro
 
           {/* Details */}
           <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <Link
-              href="/books"
-              className="mb-4 inline-block text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ← Volver
-            </Link>
+            <BackButton fallbackUrl="/books" />
 
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {volumeInfo.title}

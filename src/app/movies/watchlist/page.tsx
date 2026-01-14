@@ -5,8 +5,11 @@ import { useAuth } from '@/hooks/useAuth'
 import Card from '@/components/card/Card'
 import { getImageUrl } from '@/hooks/useMovies'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createMovieUrl } from '@/utils/slug'
 
 export default function WatchlistPage() {
+  const router = useRouter()
   const { user, loading: authLoading } = useAuth()
   const { movies, loading, error, removeMovie } = useMoviesToWatch()
 
@@ -78,7 +81,7 @@ export default function WatchlistPage() {
 
         {/* Movies Grid */}
         {!loading && !error && movies.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6">
             {movies.map((movie) => (
               <Card
                 key={movie.id}
@@ -91,6 +94,7 @@ export default function WatchlistPage() {
                   month: 'long',
                   year: 'numeric'
                 })}`}
+                onClick={() => router.push(`/movies/${createMovieUrl(movie.tmdb_id, movie.title)}`)}
                 actionButton={{
                   label: 'Quitar',
                   onClick: async () => {

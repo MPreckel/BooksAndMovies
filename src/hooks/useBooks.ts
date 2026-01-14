@@ -11,6 +11,9 @@ export interface GoogleBooksVolume {
     imageLinks?: {
       smallThumbnail?: string;
       thumbnail?: string;
+      small?: string;
+      medium?: string;
+      large?: string;
     };
     infoLink?: string;
     publishedDate?: string;

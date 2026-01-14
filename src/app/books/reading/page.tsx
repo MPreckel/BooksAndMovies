@@ -4,8 +4,11 @@ import { useBooksReading } from '@/hooks/useBooksReading'
 import { useAuth } from '@/hooks/useAuth'
 import Card from '@/components/card/Card'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createBookUrl } from '@/utils/slug'
 
 export default function BooksReadingPage() {
+  const router = useRouter()
   const { user, loading: authLoading } = useAuth()
   const { books, loading, error, removeBook, getProgress } = useBooksReading()
 
@@ -72,7 +75,7 @@ export default function BooksReadingPage() {
         )}
 
         {!loading && !error && books.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-6">
             {books.map((book) => {
               const progress = getProgress(book.google_books_id);
               return (
@@ -98,6 +101,7 @@ export default function BooksReadingPage() {
                       </div>
                     </div>
                   }
+                  onClick={() => router.push(`/books/${createBookUrl(book.google_books_id, book.title)}`)}
                   actionButton={{
                     label: 'Quitar',
                     onClick: async () => {
